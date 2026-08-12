@@ -1,0 +1,260 @@
+---
+import { projects, type ProjectCaseStudy } from '../../data/projects';
+
+export function getStaticPaths() {
+  return projects.map((project) => ({ params: { slug: project.slug }, props: { project } }));
+}
+
+interface Props {
+  project: ProjectCaseStudy;
+}
+
+const { project } = Astro.props;
+const currentIndex = projects.findIndex((entry) => entry.slug === project.slug);
+const previous = currentIndex > 0 ? projects[currentIndex - 1] : undefined;
+const next = currentIndex < projects.length - 1 ? projects[currentIndex + 1] : undefined;
+const home = '../../index.html';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="description" content={project.summary} />
+    <title>{project.title} — Zhengjie</title>
+  </head>
+  <body>
+    <div class="shell">
+      <header class="topbar">
+        <div class="topbar-inner">
+          <a class="identity" href={`${home}#home`} data-home-link="#home" aria-label="Zhengjie portfolio home">
+            <span class="brand">Zhengjie<i></i></span>
+            <span class="brand-sub">Portfolio</span>
+          </a>
+          <nav class="nav" aria-label="Primary navigation">
+            <a href={`${home}#home`} data-home-link="#home"><span class="n">01</span><span>Home</span></a>
+            <a class="active" href={`${home}#work`} data-home-link="#work"><span class="n">02</span><span>Work</span><span class="arrow">→</span></a>
+            <a href={`${home}#experience`} data-home-link="#experience"><span class="n">03</span><span>Experience</span></a>
+            <a href={`${home}#skills`} data-home-link="#skills"><span class="n">04</span><span>Skills</span></a>
+            <a href={`${home}#contact`} data-home-link="#contact"><span class="n">05</span><span>Contact</span></a>
+          </nav>
+          <div class="topbar-meta">
+            <span class="status"><span class="dot"></span>Available</span>
+            <span>Aachen, Germany</span>
+          </div>
+        </div>
+      </header>
+
+      <main class="case-main">
+        <a class="back-link" href={`${home}#work`} data-home-link="#work"><span aria-hidden="true">←</span> Back to selected work</a>
+
+        <header class="case-hero">
+          <div class="case-title">
+            <p class="case-category">{String(project.order).padStart(2, '0')} / {project.category.join(' / ')}</p>
+            <h1>{project.title}</h1>
+            <p class="case-summary">{project.summary}</p>
+          </div>
+          <dl class="case-meta">
+            <div><dt>Role</dt><dd>{project.role}</dd></div>
+            <div><dt>Period</dt><dd>{project.period}</dd></div>
+            <div><dt>Focus</dt><dd>{project.category.join(' · ')}</dd></div>
+          </dl>
+        </header>
+
+        <section class="metrics" aria-label="Project metrics">
+          {project.metrics.map((metric) => (
+            <div><strong>{metric.value}</strong><span>{metric.label}</span></div>
+          ))}
+        </section>
+
+        <section class="system-view" data-visual={project.visual} aria-label={`${project.title} system workflow`}>
+          <div class="system-head">
+            <strong>System view / verified workflow</strong>
+            <span>{project.visual === 'bakery' ? 'data intelligence' : project.visual === 'traffic' ? 'simulation chain' : 'audio inference'}</span>
+          </div>
+          <div class="workflow-scroll">
+            <div class="workflow">
+              {project.flow.map((stage, index) => (
+                <>
+                  <div class="workflow-node">
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+                    <strong>{stage}</strong>
+                    <i></i>
+                  </div>
+                  {index < project.flow.length - 1 && <div class="workflow-edge"><b></b></div>}
+                </>
+              ))}
+            </div>
+          </div>
+
+          {project.visual === 'bakery' && (
+            <div class="visual-preview bakery-preview" aria-hidden="true">
+              <div class="preview-sidebar"><b></b><i></i><i></i><i></i><i></i></div>
+              <div class="preview-main">
+                <div class="preview-kpis"><i></i><i></i><i></i><i></i></div>
+                <svg viewBox="0 0 760 120" preserveAspectRatio="none"><polyline fill="none" stroke="#1b858b" stroke-width="3" points="0,98 80,72 160,83 245,46 330,58 420,25 505,37 610,14 760,4"/><polyline fill="none" stroke="#ee5b24" stroke-width="2" opacity=".65" points="0,112 100,94 210,99 310,76 410,81 520,58 650,51 760,34"/></svg>
+              </div>
+            </div>
+          )}
+
+          {project.visual === 'traffic' && (
+            <div class="visual-preview traffic-preview" aria-hidden="true">
+              <svg class="traffic-schematic" viewBox="0 0 1000 180" preserveAspectRatio="none">
+                <defs>
+                  <marker id="traffic-direct-arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                    <path d="M0 0 L10 5 L0 10 Z" fill="#ee5b24" />
+                  </marker>
+                  <marker id="traffic-reflection-arrow" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                    <path d="M0 0 L10 5 L0 10 Z" fill="#687477" />
+                  </marker>
+                </defs>
+
+                <g class="traffic-buildings">
+                  <rect x="50" y="18" width="220" height="42" />
+                  <rect x="340" y="18" width="180" height="42" />
+                  <rect x="640" y="18" width="300" height="42" />
+                </g>
+                <rect class="traffic-road" x="0" y="86" width="1000" height="60" />
+                <line class="traffic-centre-line" x1="0" y1="116" x2="1000" y2="116" />
+
+                <g class="traffic-car source-car" transform="translate(250 128)" data-point-source="250 128">
+                  <rect x="-26" y="-9" width="52" height="18" />
+                  <path d="M26 -9 L35 0 L26 9 Z" />
+                </g>
+                <g class="traffic-car opposing-car" transform="translate(760 101) rotate(180)">
+                  <rect x="-26" y="-9" width="52" height="18" />
+                  <path d="M26 -9 L35 0 L26 9 Z" />
+                </g>
+
+                <circle class="receiver-ring" cx="740" cy="165" r="7" />
+                <circle class="receiver-core" cx="740" cy="165" r="2.5" />
+                <text class="receiver-label" x="756" y="169">RECEIVER</text>
+
+                <circle class="source-ring" cx="250" cy="128" r="7" />
+                <circle class="source-core" cx="250" cy="128" r="2.5" />
+                <path class="acoustic-ray direct" d="M740 165 L250 128" marker-end="url(#traffic-direct-arrow)" />
+                <path class="acoustic-ray reflected" d="M740 165 L520 60 L250 128" marker-end="url(#traffic-reflection-arrow)" />
+                <circle class="reflection-point" cx="520" cy="60" r="4" data-point-reflection="520 60" />
+                <text class="reflection-label" x="530" y="53">REFLECTION</text>
+
+                <text class="source-label" x="177" y="113">SOURCE</text>
+              </svg>
+            </div>
+          )}
+
+          {project.visual === 'speech' && (
+            <div class="visual-preview speech-preview" aria-hidden="true">
+              <div class="mfcc-panel"></div>
+              <svg viewBox="0 0 600 120" preserveAspectRatio="none"><polyline fill="none" stroke="#577db3" stroke-width="3" points="0,60 15,60 30,18 45,102 60,29 75,74 94,58 113,9 128,108 143,42 162,88 181,55 200,3 219,116 238,34 257,78 276,51 295,19 314,98 333,46 352,69 371,35 390,91 409,56 428,64 447,22 466,101 485,44 504,72 523,57 542,63 561,59 580,60 600,60"/></svg>
+              <div class="cnn-bars"><i></i><i></i><i></i><i></i><strong>0–9</strong></div>
+            </div>
+          )}
+        </section>
+
+        <section class="story" aria-label="Case study details">
+          {project.sections.map((section, index) => (
+            <article class="story-row">
+              <div class="story-label"><span>{String(index + 1).padStart(2, '0')}</span><h2>{section.title}</h2></div>
+              <div class="story-copy">
+                {section.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+              </div>
+            </article>
+          ))}
+        </section>
+
+        <section class="stack-section">
+          <div><span>Technical stack</span><h2>Tools used in the workflow</h2></div>
+          <div class="stack-list">{project.technologies.map((technology) => <span>{technology}</span>)}</div>
+          {project.repository && <a class="repo-link" href={project.repository} target="_blank" rel="noreferrer">{project.repositoryLabel ?? 'View GitHub repository'} <span aria-hidden="true">↗</span></a>}
+        </section>
+
+        <nav class="case-navigation" aria-label="Case study navigation">
+          {previous ? (
+            <a href={`../${previous.slug}/index.html`}><span>← Previous case study</span><strong>{previous.shortTitle}</strong></a>
+          ) : <span aria-hidden="true"></span>}
+          {next ? (
+            <a class="next" href={`../${next.slug}/index.html`}><span>Next case study →</span><strong>{next.shortTitle}</strong></a>
+          ) : <a class="next" href={`${home}#work`} data-home-link="#work"><span>Return to portfolio →</span><strong>Selected work</strong></a>}
+        </nav>
+
+        <footer class="footer"><span>Zhengjie / AI &amp; Data Engineer</span><span><b>Real inputs</b> → real systems → engineering outcomes</span></footer>
+      </main>
+    </div>
+    <script is:inline>
+      if (window.location.protocol === 'file:') {
+        const localHome = '../../zhengjie_portfolio_final_current.html';
+        document.querySelectorAll('[data-home-link]').forEach((link) => {
+          const hash = link.getAttribute('data-home-link') || '';
+          link.setAttribute('href', `${localHome}${hash}`);
+        });
+      }
+    </script>
+  </body>
+</html>
+
+<style>
+  :root{--bg:#f7f7f3;--panel:#fbfbf8;--text:#14191d;--muted:#6d767d;--line:#d8dddc;--line2:#e8ebe9;--teal:#1b858b;--orange:#ee5b24;--blue:#577db3;--shadow:0 14px 36px rgba(22,30,35,.055);--mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;--sans:"Aptos","Segoe UI Variable Text","Segoe UI","Helvetica Neue",Arial,sans-serif}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);letter-spacing:.01em}
+  a{color:inherit;text-decoration:none}
+  .shell{min-height:100vh}
+  .topbar{position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line);background:rgba(247,247,243,.94);backdrop-filter:blur(12px)}
+  .topbar-inner{max-width:1280px;margin:0 auto;padding:14px 42px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:32px}
+  .identity{display:flex;align-items:baseline;gap:12px;white-space:nowrap}
+  .brand{font:700 20px/1 var(--sans);letter-spacing:-.025em}.brand i{display:inline-block;width:14px;height:2px;background:var(--orange);margin-left:5px;vertical-align:middle}
+  .brand-sub{font:9px var(--mono);color:#687178;letter-spacing:.11em;text-transform:uppercase}
+  .nav{display:flex;align-items:center;justify-content:center;gap:4px}
+  .nav a{display:flex;align-items:center;gap:7px;padding:9px 12px;font:10px var(--mono);text-transform:uppercase;border-radius:2px}
+  .nav a:hover,.nav a:focus-visible{background:var(--line2);outline:none}
+  .nav .n{color:#8a9296;font-size:8px}.nav a.active{color:var(--orange)}.nav .arrow{font-size:13px}
+  .topbar-meta{display:flex;align-items:center;gap:14px;font:9px var(--mono);color:#667178;text-transform:uppercase;white-space:nowrap}
+  .topbar-meta .status{color:#3f4a4f}.topbar-meta .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#1ba86c;margin-right:6px}
+  .case-main{max-width:1280px;margin:0 auto;padding:0 42px 58px}
+  .back-link{display:inline-flex;align-items:center;gap:10px;margin-top:31px;padding-bottom:7px;border-bottom:1px solid var(--teal);color:var(--teal);font:10px var(--mono);text-transform:uppercase}
+  .case-hero{min-height:510px;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:72px;align-items:center;padding:72px 4px 60px;border-bottom:1px solid var(--line);position:relative}
+  .case-hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(to right,rgba(30,55,60,.033) 1px,transparent 1px),linear-gradient(to bottom,rgba(30,55,60,.033) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(to left,transparent 0,#000 45%,#000 100%);pointer-events:none}
+  .case-title,.case-meta{position:relative;z-index:1}
+  .case-category{margin:0 0 26px;color:var(--teal);font:10px var(--mono);font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+  h1{max-width:16ch;margin:0;font-size:clamp(48px,6vw,78px);font-weight:720;line-height:.96;letter-spacing:-.045em}
+  .case-summary{max-width:680px;margin:28px 0 0;color:#454f54;font-size:18px;line-height:1.6}
+  .case-meta{margin:0;border-top:1px solid var(--line)}
+  .case-meta div{display:grid;grid-template-columns:62px 1fr;gap:16px;padding:18px 0;border-bottom:1px solid var(--line);align-items:start}
+  .case-meta dt{color:#7a8387;font:9px var(--mono);text-transform:uppercase}
+  .case-meta dd{margin:0;font-size:14px;line-height:1.45}
+  .metrics{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line)}
+  .metrics div{padding:28px 24px;border-right:1px solid var(--line)}.metrics div:last-child{border-right:0}
+  .metrics strong{display:block;margin-bottom:7px;color:var(--teal);font:28px var(--mono)}
+  .metrics span{font:9px/1.4 var(--mono);text-transform:uppercase;color:#596368}
+  .system-view{margin-top:48px;border:1px solid var(--line);background:rgba(250,251,248,.72);box-shadow:var(--shadow);padding:22px}
+  .system-head{display:flex;justify-content:space-between;align-items:center;padding:3px 4px 16px;border-bottom:1px solid var(--line)}
+  .system-head strong{font:12px var(--mono);text-transform:uppercase}.system-head span{color:var(--muted);font:9px var(--mono);text-transform:uppercase}
+  .workflow-scroll{overflow-x:auto;scrollbar-width:none}.workflow-scroll::-webkit-scrollbar{display:none}
+  .workflow{min-width:720px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr) 44px) minmax(0,1fr);align-items:center;padding:24px 12px}
+  .workflow-node{min-height:112px;border:1px solid #cfd5d3;background:rgba(255,255,255,.62);padding:13px;position:relative;overflow:hidden}
+  .workflow-node::after{content:"";position:absolute;left:0;top:0;width:3px;height:100%;background:var(--teal)}
+  [data-visual="traffic"] .workflow-node::after{background:var(--orange)}[data-visual="speech"] .workflow-node::after{background:var(--blue)}
+  .workflow-node span{display:block;margin-bottom:14px;color:#7a8387;font:8px var(--mono)}
+  .workflow-node strong{display:block;font:650 15px/1.25 var(--sans)}
+  .workflow-node i{position:absolute;left:13px;right:13px;bottom:13px;height:1px;background:var(--line)}
+  .workflow-edge{height:1px;background:#adb7b5;position:relative}.workflow-edge::after{content:"";position:absolute;right:0;top:-3px;border-left:5px solid var(--orange);border-top:3px solid transparent;border-bottom:3px solid transparent}.workflow-edge b{position:absolute;left:4px;top:-2px;width:5px;height:5px;border-radius:50%;background:var(--teal)}
+  .visual-preview{height:180px;margin:0 12px 4px;border-top:1px solid var(--line2);background:#f3f5f2;position:relative;overflow:hidden}
+  .bakery-preview{display:grid;grid-template-columns:90px 1fr;padding:18px;gap:14px}.preview-sidebar{background:#252e33;padding:15px 12px}.preview-sidebar b,.preview-sidebar i{display:block;height:4px;margin-bottom:12px;border-radius:2px;background:#5c686e}.preview-sidebar b{width:70%;background:var(--orange)}.preview-main{display:grid;grid-template-rows:42px minmax(0,1fr);gap:12px;min-height:0}.preview-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.preview-kpis i{background:white;border:1px solid var(--line)}.preview-main svg{display:block;width:100%;height:100%;min-height:0;background:white;border:1px solid var(--line);padding:12px}
+  .traffic-preview{background:#eef1ee}.traffic-schematic{display:block;width:100%;height:100%}.traffic-buildings rect{fill:#dce2df;stroke:#c8cfcc;stroke-width:1.4}.traffic-road{fill:#3e494e}.traffic-centre-line{stroke:#f2f3f1;stroke-width:2;stroke-dasharray:8 7}.traffic-car rect{fill:#78878c;stroke:#dbe0de;stroke-width:2}.traffic-car path{fill:#aab7ba;stroke:#dbe0de;stroke-width:1.5}.acoustic-ray{fill:none;stroke-linecap:round;stroke-linejoin:round}.acoustic-ray.direct{stroke:var(--orange);stroke-width:2.5}.acoustic-ray.reflected{stroke:#687477;stroke-width:2.2;stroke-dasharray:8 6}.receiver-ring{fill:#eef1ee;stroke:var(--teal);stroke-width:3}.receiver-core{fill:var(--teal)}.source-ring{fill:#eef1ee;stroke:var(--orange);stroke-width:3}.source-core{fill:var(--orange)}.reflection-point{fill:#eef1ee;stroke:#687477;stroke-width:2}.receiver-label,.source-label,.reflection-label{font:9px var(--mono);letter-spacing:.04em}.receiver-label{fill:var(--teal)}.source-label{fill:var(--orange)}.reflection-label{fill:#687477}
+  .speech-preview{display:grid;grid-template-columns:200px 1fr 190px;align-items:center;gap:28px;padding:20px}.mfcc-panel{height:138px;background:linear-gradient(180deg,#092a4b,#15487b 35%,#f0a030 78%,#111c37);position:relative}.mfcc-panel::after{content:"";position:absolute;inset:10px;background:repeating-linear-gradient(90deg,transparent 0 10px,rgba(255,255,255,.17) 11px 12px),repeating-linear-gradient(0deg,transparent 0 14px,rgba(0,0,0,.18) 15px 16px);mix-blend-mode:screen}.speech-preview svg{width:100%;height:120px}.cnn-bars{height:120px;display:flex;align-items:flex-end;gap:8px}.cnn-bars i{width:28px;border:1px solid #91a2ad;background:rgba(87,125,179,.14)}.cnn-bars i:nth-child(1){height:28px}.cnn-bars i:nth-child(2){height:48px}.cnn-bars i:nth-child(3){height:73px}.cnn-bars i:nth-child(4){height:98px}.cnn-bars strong{align-self:center;color:var(--blue);font:26px var(--mono)}
+  .story{margin-top:54px;border-top:1px solid var(--line)}
+  .story-row{display:grid;grid-template-columns:230px minmax(0,1fr);gap:44px;padding:35px 0;border-bottom:1px solid var(--line)}
+  .story-label{display:flex;align-items:baseline;gap:18px}.story-label span{color:#8a9296;font:9px var(--mono)}.story-label h2{margin:0;font:12px/1.35 var(--mono);text-transform:uppercase;letter-spacing:.02em}
+  .story-copy{max-width:820px}.story-copy p{margin:0 0 16px;color:#465056;font-size:16px;line-height:1.72}.story-copy p:last-child{margin-bottom:0}
+  .stack-section{display:grid;grid-template-columns:230px minmax(0,1fr);gap:44px;padding:48px 0;border-bottom:1px solid var(--line);position:relative}
+  .stack-section>div:first-child span{color:var(--teal);font:9px var(--mono);text-transform:uppercase}.stack-section h2{margin:10px 0 0;font-size:22px;letter-spacing:-.02em}
+  .stack-list{display:flex;flex-wrap:wrap;gap:8px;align-content:start}.stack-list span{padding:7px 10px;border:1px solid #cfd5d3;background:#fafbf8;font:9px var(--mono);text-transform:uppercase}
+  .repo-link{grid-column:2;justify-self:start;margin-top:14px;padding-bottom:7px;border-bottom:1px solid var(--teal);color:var(--teal);font:10px var(--mono);text-transform:uppercase}
+  .case-navigation{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px;padding:48px 0;border-bottom:1px solid var(--line)}
+  .case-navigation a{display:grid;gap:9px;min-height:72px;padding:18px;border:1px solid var(--line);background:rgba(251,251,248,.7)}.case-navigation a:hover,.case-navigation a:focus-visible{border-color:var(--teal);outline:none}.case-navigation span{color:#747e83;font:9px var(--mono);text-transform:uppercase}.case-navigation strong{font-size:18px}.case-navigation .next{text-align:right}
+  .footer{display:flex;justify-content:space-between;align-items:center;padding-top:22px;font:9px var(--mono);text-transform:uppercase;color:#5f696d}.footer b{color:var(--orange)}
+  @media(max-width:980px){.topbar-inner{grid-template-columns:1fr auto;gap:8px 18px;padding:12px 22px 0}.nav{grid-column:1/-1;justify-content:space-between;padding-bottom:10px}.nav a{padding:8px 4px}.nav .n,.nav .arrow{display:none}.topbar-meta{grid-column:2;grid-row:1}.topbar-meta>span:last-child{display:none}.case-main{padding:0 22px 44px}.case-hero{grid-template-columns:1fr;gap:36px;min-height:auto;padding:62px 0 48px}.case-meta{max-width:560px}.story-row,.stack-section{grid-template-columns:170px minmax(0,1fr);gap:28px}.speech-preview{grid-template-columns:140px 1fr 130px}.footer{gap:24px}}
+  @media(max-width:640px){.brand-sub{display:none}.nav a{font-size:9px}.back-link{margin-top:24px}.case-hero{padding-top:48px}.case-category{line-height:1.55}h1{font-size:42px}.case-summary{font-size:16px}.metrics{grid-template-columns:1fr}.metrics div{border-right:0;border-bottom:1px solid var(--line);padding:21px 6px}.metrics div:last-child{border-bottom:0}.system-view{margin-top:34px;padding:15px 12px}.system-head{align-items:flex-start;gap:14px}.system-head span{text-align:right}.workflow{padding-inline:0}.visual-preview{height:150px;margin-inline:0}.bakery-preview{grid-template-columns:62px 1fr;padding:12px;gap:9px}.preview-sidebar{padding:12px 8px}.traffic-preview{height:160px}.speech-preview{grid-template-columns:95px 1fr 78px;gap:10px;padding:14px}.mfcc-panel{height:112px}.cnn-bars{gap:4px}.cnn-bars i{width:14px}.cnn-bars strong{font-size:16px}.story-row,.stack-section{grid-template-columns:1fr;gap:18px;padding:28px 0}.story-label{gap:12px}.story-copy p{font-size:15px}.repo-link{grid-column:1}.case-navigation{grid-template-columns:1fr;gap:14px;padding:34px 0}.case-navigation>span{display:none}.case-navigation .next{text-align:left}.footer{align-items:flex-start;flex-direction:column}}
+  @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>

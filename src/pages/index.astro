@@ -1,0 +1,446 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Zhengjie — AI & Data Engineer</title>
+<style>
+:root{
+  --bg:#f7f7f3;
+  --panel:#fbfbf8;
+  --text:#14191d;
+  --muted:#6d767d;
+  --line:#d8dddc;
+  --line2:#e8ebe9;
+  --teal:#1b858b;
+  --orange:#ee5b24;
+  --blue:#577db3;
+  --shadow:0 14px 36px rgba(22,30,35,.055);
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+  --sans:"Aptos","Segoe UI Variable Text","Segoe UI","Helvetica Neue",Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);letter-spacing:.01em}
+a{color:inherit;text-decoration:none}
+.shell{min-height:100vh}
+.topbar{position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line);background:rgba(247,247,243,.94);backdrop-filter:blur(12px)}
+.topbar-inner{max-width:1280px;margin:0 auto;padding:14px 42px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:32px}
+.identity{display:flex;align-items:baseline;gap:12px;white-space:nowrap}
+.brand{font:700 20px/1 var(--sans);letter-spacing:-.025em}.brand i{display:inline-block;width:14px;height:2px;background:var(--orange);margin-left:5px;vertical-align:middle}
+.brand-sub{font:9px var(--mono);color:#687178;letter-spacing:.11em;text-transform:uppercase}
+.nav{display:flex;align-items:center;justify-content:center;gap:4px}
+.nav a{display:flex;align-items:center;gap:7px;padding:9px 12px;font:10px var(--mono);text-transform:uppercase;border-radius:2px}
+.nav a:hover,.nav a:focus-visible{background:var(--line2);outline:none}
+.nav .n{color:#8a9296;font-size:8px}.nav a.active{color:var(--orange)}.nav .arrow{font-size:13px}
+.topbar-meta{display:flex;align-items:center;gap:14px;font:9px var(--mono);color:#667178;text-transform:uppercase;white-space:nowrap}
+.topbar-meta .status{color:#3f4a4f}.topbar-meta .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:#1ba86c;margin-right:6px}
+.main{max-width:1280px;width:100%;margin:0 auto;padding:0 42px 58px}
+.main section[id],.main footer[id]{scroll-margin-top:84px}
+.hero{min-height:650px;padding-top:20px;display:grid;grid-template-columns:minmax(340px,.82fr) minmax(620px,1.18fr);gap:44px;align-items:center;border-bottom:1px solid var(--line);position:relative}
+.hero::before{content:"";position:absolute;inset:0;background-image:linear-gradient(to right,rgba(30,55,60,.033) 1px,transparent 1px),linear-gradient(to bottom,rgba(30,55,60,.033) 1px,transparent 1px);background-size:44px 44px;mask-image:linear-gradient(to right,transparent 0,#000 32%,#000 100%);pointer-events:none}
+.hero-copy{position:relative;z-index:1;padding-left:4px}
+h1{font-size:74px;line-height:.92;letter-spacing:-.045em;margin:0 0 19px;font-weight:760}
+.role{font:23px/1.1 var(--mono);font-weight:700;color:var(--orange);letter-spacing:.01em;margin-bottom:21px}
+.focus{font:11px var(--mono);text-transform:uppercase;color:#3e5559;display:flex;gap:12px;flex-wrap:wrap;margin-bottom:28px}.focus b{color:var(--teal)}
+.lede{font:17px/1.58 var(--sans);max-width:430px;color:#333b40;margin:0 0 28px}.cta{display:inline-flex;align-items:center;gap:14px;font:12px var(--mono);font-weight:700;text-transform:uppercase;color:var(--teal);padding-bottom:7px;border-bottom:1px solid var(--teal)}.cta span{color:var(--orange);font-size:17px}
+.system-map{position:relative;z-index:1;background:rgba(250,251,248,.72);border:1px solid var(--line);box-shadow:var(--shadow);padding:20px 20px 18px;backdrop-filter:blur(3px)}
+.map-head{display:flex;align-items:flex-end;justify-content:space-between;padding:4px 4px 13px;border-bottom:1px solid var(--line)}
+.map-title{font:13px var(--mono);font-weight:700}.map-note{font:9px var(--mono);color:var(--muted);letter-spacing:.07em;text-transform:uppercase}
+.lane{display:grid;grid-template-columns:86px 1fr;min-height:132px;border-bottom:1px solid var(--line2)}.lane:last-of-type{border-bottom:0}
+.lane-label{padding:24px 10px 18px 5px;border-right:1px solid var(--line2)}.lane-label strong{font:12px var(--mono);display:block;margin-bottom:5px}.lane-label span{font:9px/1.45 var(--mono);color:var(--muted)}
+.flow{display:grid;grid-template-columns:1fr 24px 1fr 24px 1fr 24px 1fr;align-items:center;padding:15px 7px 14px 14px}
+.node{min-height:84px;border:1px solid #cfd5d3;background:rgba(255,255,255,.6);padding:10px 9px;position:relative;overflow:hidden}.node::after{content:"";position:absolute;left:0;top:0;width:3px;height:100%;background:var(--teal);opacity:.72}.lane.sim .node::after{background:var(--orange)}.lane.audio .node::after{background:var(--blue)}
+.node .k{font:8px var(--mono);color:var(--muted);text-transform:uppercase;margin-bottom:8px}.node .v{font:11px/1.25 var(--mono);font-weight:700}.node .mini{font:8px/1.45 var(--mono);color:#687279;margin-top:7px}
+.edge{height:1px;background:#aeb8b7;position:relative}.edge::after{content:"";position:absolute;right:-1px;top:-3px;border-left:5px solid var(--orange);border-top:3px solid transparent;border-bottom:3px solid transparent}.edge .pulse{position:absolute;width:5px;height:5px;border-radius:50%;background:var(--teal);top:-2px;left:0;animation:travel 3.2s linear infinite}.sim .edge .pulse{background:var(--orange);animation-delay:.8s}.audio .edge .pulse{background:var(--blue);animation-delay:1.6s}
+@keyframes travel{from{left:0}to{left:calc(100% - 4px)}}
+.map-foot{border-top:1px solid var(--line);margin-top:6px;padding:10px 4px 1px;display:flex;justify-content:space-between;font:8px var(--mono);color:#727b80;text-transform:uppercase}
+.section{padding:34px 0 0}.section-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding-bottom:13px;margin-bottom:0}.section-head h2{font:17px var(--mono);margin:0;text-transform:uppercase}.section-head a{font:10px var(--mono);color:var(--teal)}
+.project{display:grid;grid-template-columns:76px 270px minmax(260px,1fr) 120px;gap:22px;padding:22px 0;border-bottom:1px solid var(--line);align-items:stretch;position:relative;transition:background .18s ease}.project:hover{background:rgba(232,235,233,.42)}.project-link{position:absolute;inset:0;z-index:2}.project-link:focus-visible{outline:2px solid var(--teal);outline-offset:-2px}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}.project-num{font:38px var(--mono);color:var(--teal);line-height:1}.project-num small{display:block;font:8px/1.55 var(--mono);color:#596368;margin-top:12px;text-transform:uppercase}.project-visual{height:170px;border:1px solid #ccd3d1;background:#f1f4f3;position:relative;overflow:hidden}.project-text h3{font:650 23px/1.15 var(--sans);margin:3px 0 12px;letter-spacing:-.015em}.project-text p{font:13px/1.6 var(--sans);color:#4e585d;max-width:520px}.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:15px}.tags span{border:1px solid #cfd5d3;padding:4px 7px;font:8px var(--mono);text-transform:uppercase;background:#fafbf8}.pipeline{border-left:1px solid var(--line);padding-left:17px;display:flex;flex-direction:column;justify-content:center;gap:9px;font:9px/1.2 var(--mono);text-align:center}.pipeline i{height:16px;width:1px;background:#aab2b1;margin:0 auto;position:relative}.pipeline i::after{content:"";position:absolute;bottom:-1px;left:-3px;width:5px;height:5px;border-right:1px solid #6b7779;border-bottom:1px solid #6b7779;transform:rotate(45deg)}
+/* code-native mini visuals */
+.mini-dashboard{position:absolute;inset:12px;display:grid;grid-template-columns:46px 1fr;gap:7px}.mini-side{background:#232c32;border-radius:2px;padding:10px 6px}.mini-side b,.mini-side i{display:block;height:3px;background:#59666d;margin-bottom:8px;border-radius:2px}.mini-side b{background:var(--orange);width:70%}.mini-main{display:grid;grid-template-rows:28px 1fr;gap:7px}.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.kpis i{border:1px solid #d3d9d7;background:#fff}.chart{border:1px solid #d3d9d7;background:#fff;position:relative}.chart svg{position:absolute;inset:9px;width:calc(100% - 18px);height:calc(100% - 18px)}
+.auralization-visual{padding:0;background:#f6f7f3;overflow:hidden}.auralization-svg{width:100%;height:100%;display:block}
+.speech-vis{display:grid;grid-template-columns:1fr 1fr;height:100%}.mfcc{background:linear-gradient(180deg,#092a4b,#15487b 35%,#f0a030 78%,#111c37);position:relative}.mfcc::after{content:"";position:absolute;inset:12px;background:repeating-linear-gradient(90deg,transparent 0 8px,rgba(255,255,255,.17) 9px 10px),repeating-linear-gradient(0deg,transparent 0 12px,rgba(0,0,0,.18) 13px 14px);mix-blend-mode:screen}.wave{position:relative;background:#f7f8f6}.wave svg{position:absolute;inset:20px 10px 70px;width:calc(100% - 20px);height:70px}.cnn-stack{position:absolute;left:18px;right:18px;bottom:13px;display:flex;align-items:flex-end;gap:5px}.cnn-stack i{display:block;width:28px;border:1px solid #99a9b3;background:rgba(87,125,179,.12)}.cnn-stack i:nth-child(1){height:16px}.cnn-stack i:nth-child(2){height:24px}.cnn-stack i:nth-child(3){height:33px}.cnn-stack i:nth-child(4){height:43px}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line);margin-top:34px}.summary div{padding:24px 20px;border-right:1px solid var(--line)}.summary div:last-child{border-right:0}.summary strong{display:block;font:25px var(--mono);color:var(--teal);margin-bottom:5px}.summary span{font:9px/1.45 var(--mono);text-transform:uppercase;color:#596368}
+.skills{padding:29px 0 0}.skills h2{font:15px var(--mono);text-transform:uppercase;border-bottom:1px solid var(--line);padding-bottom:11px}.skill-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0}.skill-col{padding:9px 22px 10px 0;border-right:1px solid var(--line)}.skill-col:not(:first-child){padding-left:24px}.skill-col:last-child{border-right:0}.skill-col h4{font:10px var(--mono);text-transform:uppercase;color:var(--teal);margin:0 0 10px}.skill-col p{font:10px/1.75 var(--mono);color:#4f595e;margin:0}
+.footer{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--line);margin-top:34px;padding:22px 0 0;font:9px var(--mono);text-transform:uppercase;color:#5f696d}.footer .accent{color:var(--orange)}
+@media(max-width:980px){.topbar-inner{grid-template-columns:1fr auto;gap:8px 18px;padding:12px 22px 0}.nav{grid-column:1/-1;justify-content:space-between;padding-bottom:10px}.nav a{padding:8px 4px}.nav .n,.nav .arrow{display:none}.topbar-meta{grid-column:2;grid-row:1}.topbar-meta>span:last-child{display:none}.main{padding:0 22px 48px}.main section[id],.main footer[id]{scroll-margin-top:100px}.hero{grid-template-columns:1fr;gap:28px;padding:54px 0}.system-map{margin-bottom:22px}.project{grid-template-columns:60px 1fr}.project-visual,.project-text{grid-column:2}.pipeline{display:none}.summary{grid-template-columns:repeat(2,1fr)}.skill-grid{grid-template-columns:repeat(2,1fr)}.skill-col{border-right:0;border-bottom:1px solid var(--line);padding:18px 0!important}h1{font-size:56px}.flow{grid-template-columns:1fr 16px 1fr 16px 1fr 16px 1fr}.node{min-height:74px;padding:8px 7px}.node .mini{display:none}}
+@media(max-width:600px){.brand-sub{display:none}.nav a{font-size:9px}.system-map{padding:16px 12px}.map-head{align-items:flex-start;gap:12px}.map-note{text-align:right}.lane{grid-template-columns:72px minmax(0,1fr)}.lane-label{padding-left:2px}.flow{grid-template-columns:110px 16px 110px 16px 110px 16px 110px;overflow-x:auto;scrollbar-width:none}.flow::-webkit-scrollbar{display:none}.node{min-height:88px}.node .mini{display:block}.map-foot{gap:14px;line-height:1.45}}
+
+/* experience + education timeline */
+.timeline-section{padding:44px 0 0}
+.timeline-head{display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:19px 0 16px}
+.timeline-head h2{font:17px var(--mono);margin:0;text-transform:uppercase;letter-spacing:.01em}
+.timeline-head span{font:10px var(--mono);color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.timeline-list{position:relative}
+.timeline-row{display:grid;grid-template-columns:96px 34px minmax(0,1fr) 112px;min-height:210px;border-bottom:1px solid var(--line);position:relative;align-items:stretch}
+.timeline-date{display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:8px;padding:26px 8px 26px 10px;font:10px/1 var(--mono);color:#687278;letter-spacing:.035em}
+.timeline-date .date-line{width:20px;height:1px;background:#b8c0bf}
+.timeline-rail{position:relative;border-left:1px solid var(--line);margin-left:12px}
+.timeline-dot{position:absolute;left:-5px;top:50%;width:9px;height:9px;border:1px solid #9da7a8;background:var(--bg);transform:translateY(-50%)}
+.timeline-row.experience .timeline-dot{border-color:var(--orange);background:var(--orange)}
+.timeline-body{display:flex;flex-direction:column;justify-content:center;padding:30px 32px 30px 24px;min-width:0}
+.timeline-body h3{font:650 27px/1.12 var(--sans);margin:0 0 6px;letter-spacing:-.018em}
+.timeline-sub{font:15px/1.35 var(--sans);color:#667075;margin-bottom:22px}
+.timeline-detail{display:grid;grid-template-columns:56px minmax(0,1fr);align-items:center;gap:10px;margin-top:10px;max-width:820px}
+.timeline-detail b{font:10px var(--mono);font-weight:500;color:#7c8589;text-transform:uppercase}
+.timeline-detail p{font:13px/1.55 var(--sans);color:#5c656a;margin:0}
+.timeline-type{display:flex;align-items:center;justify-content:flex-end;padding:26px 0;font:10px var(--mono);color:#7a8387;text-transform:uppercase;letter-spacing:.06em}
+@media(max-width:980px){.timeline-head span{display:none}.timeline-row{grid-template-columns:76px 28px minmax(0,1fr);min-height:auto}.timeline-date{grid-column:1;grid-row:1/3;padding:24px 6px 24px 0;align-items:flex-start}.timeline-rail{grid-column:2;grid-row:1/3;margin-left:8px}.timeline-body{grid-column:3;padding:26px 0 10px 18px}.timeline-type{grid-column:3;padding:0 0 24px 18px;justify-content:flex-start;color:var(--teal)}.timeline-body h3{font-size:23px}.timeline-detail{grid-template-columns:1fr;gap:4px}}
+
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}.pulse{animation:none!important}}
+</style>
+</head>
+<body>
+<div class="shell">
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="identity" href="#home" aria-label="Zhengjie portfolio home">
+        <span class="brand">Zhengjie<i></i></span>
+        <span class="brand-sub">Portfolio</span>
+      </a>
+      <nav class="nav" aria-label="Primary navigation">
+        <a class="active" href="#home"><span class="n">01</span><span>Home</span><span class="arrow">→</span></a>
+        <a href="#work"><span class="n">02</span><span>Work</span></a>
+        <a href="#experience"><span class="n">03</span><span>Experience</span></a>
+        <a href="#skills"><span class="n">04</span><span>Skills</span></a>
+        <a href="#contact"><span class="n">05</span><span>Contact</span></a>
+      </nav>
+      <div class="topbar-meta">
+        <span class="status"><span class="dot"></span>Available</span>
+        <span>Aachen, Germany</span>
+      </div>
+    </div>
+  </header>
+  <main class="main">
+    <section class="hero" id="home">
+      <div class="hero-copy">
+        <h1>Zhengjie</h1>
+        <div class="role">AI &amp; DATA ENGINEER</div>
+        <div class="focus"><b>AI SYSTEMS</b><span>/</span><b>DATA WORKFLOWS</b><span>/</span><b>SIMULATION</b></div>
+        <p class="lede">I build practical systems that turn real-world data, simulations and signals into usable engineering outcomes.</p>
+        <a class="cta" href="#work">Explore selected work <span>→</span></a>
+      </div>
+
+      <div class="system-map" aria-label="Project-informed engineering system map">
+        <div class="map-head"><div class="map-title">SYSTEM MAP / THREE REAL WORKFLOWS</div><div class="map-note">code-native schematic</div></div>
+
+        <div class="lane data">
+          <div class="lane-label"><strong>DATA / AI</strong><span>Bakery analytics platform</span></div>
+          <div class="flow">
+            <div class="node"><div class="k">Inputs</div><div class="v">POS + Weather</div><div class="mini">sales · loss · member · external</div></div>
+            <div class="edge"><i class="pulse"></i></div>
+            <div class="node"><div class="k">Processing</div><div class="v">Clean + Analyze</div><div class="mini">Pandas · business logic</div></div>
+            <div class="edge"><i class="pulse"></i></div>
+            <div class="node"><div class="k">Intelligence</div><div class="v">Agent + Forecast</div><div class="mini">LangGraph · XGBoost</div></div>
+            <div class="edge"><i class="pulse"></i></div>
+            <div class="node"><div class="k">Output</div><div class="v">Dashboard + Insight</div><div class="mini">Streamlit · Plotly</div></div>
+          </div>
+        </div>
+
+        <div class="lane sim">
+          <div class="lane-label"><strong>SIMULATION</strong><span>Road traffic auralization</span></div>
+          <div class="flow">
+            <div class="node"><div class="k">Traffic</div><div class="v">SUMO FCD / CSV</div><div class="mini">routes · trajectories</div></div>
+            <div class="edge"><i class="pulse"></i></div>
+            <div class="node"><div class="k">Geometry</div><div class="v">Trajectory Transform</div><div class="mini">parse · interpolate · orient</div></div>
+            <div class="edge"><i class="pulse"></i></div>
+            <div class="node"><div class="k">Acoustics</div><div class="v">RAVEN / Pigeon</div><div class="mini">3D propagation simulation</div></div>
+            <div class="edge"><i class="pulse"></i></div>
+            <div class="node"><div class="k">Audio</div><div class="v">Synthesis + Eval</div><div class="mini">crossfade · mix · listening</div></div>
+          </div>
+        </div>
+
+        <div class="lane audio">
+          <div class="lane-label"><strong>AUDIO ML</strong><span>Spoken digit CNN</span></div>
+          <div class="flow">
+            <div class="node"><div class="k">Signal</div><div class="v">Speech WAV</div><div class="mini">FSDD + own recordings</div></div>
+            <div class="edge"><i class="pulse"></i></div>
+            <div class="node"><div class="k">Features</div><div class="v">MFCC</div><div class="mini">librosa · fixed input</div></div>
+            <div class="edge"><i class="pulse"></i></div>
+            <div class="node"><div class="k">Model</div><div class="v">1D / 2D CNN</div><div class="mini">TensorFlow · Keras</div></div>
+            <div class="edge"><i class="pulse"></i></div>
+            <div class="node"><div class="k">Inference</div><div class="v">Digit 0–9</div><div class="mini">test set + live mic</div></div>
+          </div>
+        </div>
+        <div class="map-foot"><span>DATA → PROCESS → MODEL → OUTPUT</span><span>THREE DOMAINS / ONE ENGINEERING MINDSET</span></div>
+      </div>
+    </section>
+
+    <section class="section" id="work">
+      <div class="section-head"><h2>Selected Work</h2><a href="./work/bakery-ai-analytics/index.html">03 CASE STUDIES →</a></div>
+
+      <article class="project">
+        <a class="project-link" href="./work/bakery-ai-analytics/index.html" aria-label="View case study: Bakery AI Analytics Platform"><span class="sr-only">View case study</span></a>
+        <div class="project-num">01<small>Applied AI<br/>Data system</small></div>
+        <div class="project-visual">
+          <div class="mini-dashboard"><div class="mini-side"><b></b><i></i><i></i><i></i><i></i></div><div class="mini-main"><div class="kpis"><i></i><i></i><i></i><i></i></div><div class="chart"><svg viewBox="0 0 210 100" preserveAspectRatio="none"><polyline fill="none" stroke="#1b858b" stroke-width="2" points="0,78 24,67 49,72 72,50 98,56 121,31 144,37 170,22 210,15"/><polyline fill="none" stroke="#ee5b24" stroke-width="1" opacity=".65" points="0,88 33,80 63,83 90,70 121,72 152,61 183,58 210,49"/></svg></div></div></div>
+        </div>
+        <div class="project-text"><h3>Bakery AI Analytics Platform</h3><p>Modular Streamlit analytics platform combining data loading, business analysis, forecasting and a LangGraph ReAct assistant with tool-based querying and visualization. Business values are intentionally not shown here.</p><div class="tags"><span>Python</span><span>LangGraph</span><span>Streamlit</span><span>XGBoost</span></div></div>
+        <div class="pipeline"><span>DATA</span><i></i><span>ANALYSIS</span><i></i><span>AGENT</span><i></i><span>INSIGHT</span></div>
+      </article>
+
+      <article class="project">
+        <a class="project-link" href="./work/road-traffic-auralization/index.html" aria-label="View case study: Plausible Road Traffic Auralization"><span class="sr-only">View case study</span></a>
+        <div class="project-num">02<small>Simulation<br/>Research</small></div>
+
+<div class="project-visual auralization-visual" aria-label="HTML rendered German road traffic auralization schematic">
+<svg class="auralization-svg" viewBox="0 0 1000 560" role="img" aria-labelledby="aur-title aur-desc">
+  <title id="aur-title">Plausible road traffic auralization — 2D top view</title>
+  <desc id="aur-desc">Two-dimensional top-view engineering schematic of a German two-way urban road with right-hand traffic, a source vehicle, an opposing vehicle, a roadside receiver, a direct acoustic path and two building-reflection paths.</desc>
+
+  <defs>
+    <marker id="blue-arrow-2d" viewBox="0 0 10 10" refX="8.4" refY="5"
+            markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#148fa3"/>
+    </marker>
+    <marker id="orange-arrow-2d" viewBox="0 0 10 10" refX="8.4" refY="5"
+            markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#e85b27"/>
+    </marker>
+    <pattern id="building-hatch" width="10" height="10" patternUnits="userSpaceOnUse">
+      <path d="M0 10 L10 0" stroke="#c7cecc" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <!-- background -->
+  <rect width="1000" height="560" fill="#f7f8f4"/>
+  <rect x="0.75" y="0.75" width="998.5" height="558.5" fill="none" stroke="#d4dad7" stroke-width="1.5"/>
+
+  <!-- 2D building footprints: no trees, no perspective -->
+  <g stroke="#a7b0ad" stroke-width="2">
+    <rect x="70"  y="55" width="165" height="115" fill="#dfe4e1"/>
+    <rect x="70"  y="55" width="165" height="115" fill="url(#building-hatch)" opacity=".24"/>
+    <rect x="270" y="70" width="150" height="100" fill="#dfe4e1"/>
+    <rect x="270" y="70" width="150" height="100" fill="url(#building-hatch)" opacity=".24"/>
+    <rect x="475" y="48" width="145" height="122" fill="#dfe4e1"/>
+    <rect x="475" y="48" width="145" height="122" fill="url(#building-hatch)" opacity=".24"/>
+    <rect x="715" y="62" width="205" height="108" fill="#dfe4e1"/>
+    <rect x="715" y="62" width="205" height="108" fill="url(#building-hatch)" opacity=".24"/>
+
+    <rect x="82"  y="390" width="160" height="105" fill="#dfe4e1"/>
+    <rect x="82"  y="390" width="160" height="105" fill="url(#building-hatch)" opacity=".24"/>
+    <rect x="300" y="390" width="135" height="105" fill="#dfe4e1"/>
+    <rect x="300" y="390" width="135" height="105" fill="url(#building-hatch)" opacity=".24"/>
+    <rect x="748" y="390" width="178" height="105" fill="#dfe4e1"/>
+    <rect x="748" y="390" width="178" height="105" fill="url(#building-hatch)" opacity=".24"/>
+  </g>
+
+  <!-- sidewalks / curb strips -->
+  <rect x="0" y="170" width="1000" height="60" fill="#ecefeb"/>
+  <rect x="0" y="330" width="1000" height="60" fill="#ecefeb"/>
+  <line x1="0" y1="230" x2="1000" y2="230" stroke="#aeb8b5" stroke-width="2"/>
+  <line x1="0" y1="330" x2="1000" y2="330" stroke="#aeb8b5" stroke-width="2"/>
+
+  <!-- German two-way road: right-hand traffic -->
+  <rect x="0" y="230" width="1000" height="100" fill="#39444a"/>
+  <!-- white broken centre line -->
+  <line x1="0" y1="280" x2="1000" y2="280"
+        stroke="#f0f2f1" stroke-width="4" stroke-dasharray="26 20"/>
+
+  <!-- subtle carriageway edges -->
+  <line x1="0" y1="232" x2="1000" y2="232" stroke="#6a7478" stroke-width="1.5"/>
+  <line x1="0" y1="328" x2="1000" y2="328" stroke="#6a7478" stroke-width="1.5"/>
+
+  <!-- 2D car symbol: explicit front direction -->
+  <!-- source car: lower lane, travelling LEFT -> RIGHT -->
+  <g transform="translate(285 305)">
+    <path d="M-42,-18 H22 L42,0 L22,18 H-42 Q-48,18 -48,12 V-12 Q-48,-18 -42,-18Z"
+          fill="#f8faf8" stroke="#59656a" stroke-width="2.2"/>
+    <rect x="-18" y="-12" width="30" height="24" rx="4"
+          fill="#d8e0e1" stroke="#7d8a8f" stroke-width="1.2"/>
+    <path d="M13,-12 L28,-5 L28,5 L13,12Z" fill="#c7d2d4"/>
+    <rect x="-32" y="-21" width="14" height="4" rx="2" fill="#424c50"/>
+    <rect x="18" y="-21" width="14" height="4" rx="2" fill="#424c50"/>
+    <rect x="-32" y="17" width="14" height="4" rx="2" fill="#424c50"/>
+    <rect x="18" y="17" width="14" height="4" rx="2" fill="#424c50"/>
+  </g>
+
+  <!-- opposing car: upper lane, travelling RIGHT -> LEFT -->
+  <g transform="translate(735 255) rotate(180)">
+    <path d="M-42,-18 H22 L42,0 L22,18 H-42 Q-48,18 -48,12 V-12 Q-48,-18 -42,-18Z"
+          fill="#f8faf8" stroke="#59656a" stroke-width="2.2"/>
+    <rect x="-18" y="-12" width="30" height="24" rx="4"
+          fill="#d8e0e1" stroke="#7d8a8f" stroke-width="1.2"/>
+    <path d="M13,-12 L28,-5 L28,5 L13,12Z" fill="#c7d2d4"/>
+    <rect x="-32" y="-21" width="14" height="4" rx="2" fill="#424c50"/>
+    <rect x="18" y="-21" width="14" height="4" rx="2" fill="#424c50"/>
+    <rect x="-32" y="17" width="14" height="4" rx="2" fill="#424c50"/>
+    <rect x="18" y="17" width="14" height="4" rx="2" fill="#424c50"/>
+  </g>
+
+  <!-- traffic direction arrows -->
+  <path d="M220 305 H370" fill="none" stroke="#148fa3" stroke-width="4.5"
+        marker-end="url(#blue-arrow-2d)"/>
+  <path d="M800 255 H650" fill="none" stroke="#148fa3" stroke-width="4.5"
+        marker-end="url(#blue-arrow-2d)"/>
+
+  <!-- source at vehicle centre -->
+  <circle cx="285" cy="305" r="13" fill="#f7f8f4" stroke="#e85b27" stroke-width="4"/>
+  <circle cx="285" cy="305" r="4.2" fill="#e85b27"/>
+
+  <!-- source label beside source car -->
+  <g transform="translate(205 342)">
+    <rect width="116" height="45" rx="3" fill="#fafbf8" stroke="#d1d7d4"/>
+    <text x="12" y="19" font-family="ui-monospace,monospace" font-size="14"
+          font-weight="700" fill="#e85b27">SOURCE</text>
+    <text x="12" y="35" font-family="ui-monospace,monospace" font-size="11"
+          fill="#536066">(TRAFFIC)</text>
+  </g>
+
+  <!-- roadside receiver -->
+  <circle cx="645" cy="360" r="13" fill="#f7f8f4" stroke="#148fa3" stroke-width="4"/>
+  <circle cx="645" cy="360" r="4.2" fill="#148fa3"/>
+  <line x1="645" y1="347" x2="645" y2="330" stroke="#148fa3" stroke-width="2" stroke-dasharray="4 4"/>
+  <text x="676" y="355" font-family="ui-monospace,monospace" font-size="14"
+        font-weight="700" fill="#148fa3">RECEIVER</text>
+  <text x="676" y="372" font-family="ui-monospace,monospace" font-size="11"
+        fill="#536066">(MICROPHONE)</text>
+
+  <!-- direct acoustic path -->
+  <path d="M285 305 L645 360" fill="none" stroke="#e85b27" stroke-width="4"
+        marker-end="url(#orange-arrow-2d)"/>
+
+  <!-- reflection paths: source -> building facade -> receiver -->
+  <!-- reflection point R1: bottom façade of upper building -->
+  <g fill="none" stroke="#525e63" stroke-width="3" stroke-dasharray="9 7">
+    <path d="M285 305 L345 170 L645 360"/>
+    <path d="M285 305 L545 170 L645 360"/>
+  </g>
+  <g fill="#f7f8f4" stroke="#525e63" stroke-width="2.3">
+    <circle cx="345" cy="170" r="4.7"/>
+    <circle cx="545" cy="170" r="4.7"/>
+  </g>
+  <g font-family="ui-monospace,monospace" font-size="9.5" fill="#697479">
+    <text x="352" y="164">R1</text>
+    <text x="552" y="164">R2</text>
+  </g>
+
+  <!-- restrained road labels -->
+  <g font-family="ui-monospace,monospace" font-size="9.5" fill="#707b7f">
+    <text x="22" y="215">SIDEWALK</text>
+    <text x="22" y="355">SIDEWALK</text>
+    <text x="500" y="274" text-anchor="middle">WHITE CENTRE LINE</text>
+  </g>
+
+  <!-- legend -->
+  <g transform="translate(790 405)">
+    <rect x="0" y="0" width="174" height="116" rx="4" fill="#fafbf8" stroke="#c7cecc"/>
+    <line x1="14" y1="24" x2="50" y2="24" stroke="#148fa3" stroke-width="4"/>
+    <path d="M46 19 L55 24 L46 29Z" fill="#148fa3"/>
+    <text x="64" y="28" font-family="ui-monospace,monospace" font-size="10.5" fill="#536066">TRAFFIC DIRECTION</text>
+
+    <line x1="14" y1="50" x2="50" y2="50" stroke="#e85b27" stroke-width="4"/>
+    <text x="64" y="54" font-family="ui-monospace,monospace" font-size="10.5" fill="#536066">DIRECT PATH</text>
+
+    <line x1="14" y1="76" x2="50" y2="76" stroke="#525e63" stroke-width="3" stroke-dasharray="8 6"/>
+    <text x="64" y="80" font-family="ui-monospace,monospace" font-size="10.5" fill="#536066">REFLECTION PATH</text>
+
+    <circle cx="21" cy="99" r="6.5" fill="#f7f8f4" stroke="#e85b27" stroke-width="2.5"/>
+    <text x="38" y="103" font-family="ui-monospace,monospace" font-size="10" fill="#536066">SOURCE = VEHICLE CENTRE</text>
+  </g>
+</svg>
+</div>
+
+        <div class="project-text"><h3>Plausible Road Traffic Auralization</h3><p>A configurable workflow that turns SUMO traffic trajectories into simulation-ready geometry, drives RAVEN/Pigeon acoustic workflows, then synthesizes and evaluates road-traffic audio.</p><div class="tags"><span>SUMO</span><span>Python</span><span>RAVEN</span><span>Pigeon</span><span>MATLAB</span></div></div>
+        <div class="pipeline"><span>TRAFFIC</span><i></i><span>TRAJECTORY</span><i></i><span>ACOUSTICS</span><i></i><span>AURALIZATION</span></div>
+      </article>
+
+      <article class="project">
+        <a class="project-link" href="./work/spoken-digit-cnn/index.html" aria-label="View case study: Spoken Digit Classification with CNNs"><span class="sr-only">View case study</span></a>
+        <div class="project-num">03<small>Machine<br/>Learning</small></div>
+        <div class="project-visual"><div class="speech-vis"><div class="mfcc"></div><div class="wave"><svg viewBox="0 0 160 60" preserveAspectRatio="none"><polyline fill="none" stroke="#577db3" stroke-width="2" points="0,30 4,30 8,13 12,46 16,17 20,36 25,29 30,10 34,52 38,23 43,42 48,28 52,5 57,55 62,19 66,38 71,27 76,12 80,48 85,26 90,35 95,22 101,45 106,28 112,32 118,14 124,49 130,24 136,35 142,29 148,31 154,30 160,30"/></svg><div class="cnn-stack"><i></i><i></i><i></i><i></i></div></div></div></div>
+        <div class="project-text"><h3>Spoken Digit Classification with CNNs</h3><p>Speech preprocessing and MFCC feature extraction feed 1D/2D convolutional models for experiment comparison, test-set evaluation and a later live-microphone inference stage.</p><div class="tags"><span>TensorFlow</span><span>Keras</span><span>MFCC</span><span>Librosa</span></div></div>
+        <div class="pipeline"><span>AUDIO</span><i></i><span>MFCC</span><i></i><span>CNN</span><i></i><span>INFERENCE</span></div>
+      </article>
+    </section>
+
+
+
+    <section class="timeline-section" id="experience">
+      <div class="timeline-head">
+        <h2>Experience &amp; Education</h2>
+        <span>Aachen, Germany</span>
+      </div>
+      <div class="timeline-list">
+        <article class="timeline-row experience">
+          <div class="timeline-date"><time datetime="2025-03">03/2025</time><span class="date-line"></span><time datetime="2025-12">12/2025</time></div>
+          <div class="timeline-rail"><i class="timeline-dot"></i></div>
+          <div class="timeline-body">
+            <h3>Freelance AI &amp; Data Engineer</h3>
+            <div class="timeline-sub">Self-Employed · Remote, Germany</div>
+            <div class="timeline-detail"><b>Focus</b><p>Applied AI systems, business analytics, data workflows and forecasting.</p></div>
+            <div class="timeline-detail"><b>Work</b><p>Built a LangChain/LangGraph analytics assistant, automated Python data workflows, a Streamlit analytics interface and forecasting pipelines.</p></div>
+          </div>
+          <div class="timeline-type">Experience</div>
+        </article>
+
+        <article class="timeline-row experience">
+          <div class="timeline-date"><time datetime="2023-11">11/2023</time><span class="date-line"></span><time datetime="2024-01">01/2024</time></div>
+          <div class="timeline-rail"><i class="timeline-dot"></i></div>
+          <div class="timeline-body">
+            <h3>RWTH Aachen University · IHTA</h3>
+            <div class="timeline-sub">Student Research Assistant · Aachen, Germany</div>
+            <div class="timeline-detail"><b>Focus</b><p>Acoustic simulation software and research tooling.</p></div>
+            <div class="timeline-detail"><b>Work</b><p>Adapted network communication components, implemented C++ unit tests and explored the simulation software’s Python interface structure.</p></div>
+          </div>
+          <div class="timeline-type">Experience</div>
+        </article>
+
+        <article class="timeline-row experience">
+          <div class="timeline-date"><time datetime="2021-11">11/2021</time><span class="date-line"></span><time datetime="2022-03">03/2022</time></div>
+          <div class="timeline-rail"><i class="timeline-dot"></i></div>
+          <div class="timeline-body">
+            <h3>Dejet GmbH</h3>
+            <div class="timeline-sub">Mobile Device Test Engineer Intern · Düsseldorf, Germany</div>
+            <div class="timeline-detail"><b>Focus</b><p>Product validation, field testing and technical issue analysis.</p></div>
+            <div class="timeline-detail"><b>Work</b><p>Performed laboratory and field tests, documented issues for R&amp;D troubleshooting and joined recurring technical sessions with European clients.</p></div>
+          </div>
+          <div class="timeline-type">Experience</div>
+        </article>
+
+        <article class="timeline-row experience">
+          <div class="timeline-date"><time datetime="2019-09">09/2019</time><span class="date-line"></span><time datetime="2019-12">12/2019</time></div>
+          <div class="timeline-rail"><i class="timeline-dot"></i></div>
+          <div class="timeline-body">
+            <h3>Dongguan Switch Factory Co., Ltd.</h3>
+            <div class="timeline-sub">Test Engineer Intern · Dongguan, China</div>
+            <div class="timeline-detail"><b>Focus</b><p>Electrical documentation, functional checks and product testing.</p></div>
+            <div class="timeline-detail"><b>Work</b><p>Updated electrical wiring diagrams with AutoCAD and supported functional checks, simulation testing and basic troubleshooting during switchgear assembly.</p></div>
+          </div>
+          <div class="timeline-type">Experience</div>
+        </article>
+
+        <article class="timeline-row education">
+          <div class="timeline-date"><time datetime="2021-10">10/2021</time><span class="date-line"></span><time datetime="2024-12">12/2024</time></div>
+          <div class="timeline-rail"><i class="timeline-dot"></i></div>
+          <div class="timeline-body">
+            <h3>RWTH Aachen University</h3>
+            <div class="timeline-sub">M.Sc. Computer Engineering · Aachen, Germany</div>
+            <div class="timeline-detail"><b>Focus</b><p>Artificial Intelligence, Machine Learning, Digital Signal Processing, Embedded Systems and Technical Acoustics.</p></div>
+          </div>
+          <div class="timeline-type">Education</div>
+        </article>
+
+        <article class="timeline-row education">
+          <div class="timeline-date"><time datetime="2014-10">10/2014</time><span class="date-line"></span><time datetime="2021-10">10/2021</time></div>
+          <div class="timeline-rail"><i class="timeline-dot"></i></div>
+          <div class="timeline-body">
+            <h3>University of Duisburg-Essen</h3>
+            <div class="timeline-sub">B.Sc. Electrical and Electronic Engineering · Duisburg, Germany</div>
+            <div class="timeline-detail"><b>Focus</b><p>Electrical and electronic engineering foundations with later project work in speech signal processing and deep learning.</p></div>
+          </div>
+          <div class="timeline-type">Education</div>
+        </article>
+      </div>
+    </section>
+
+    <section class="summary" id="about"><div><strong>AI</strong><span>Agents · forecasting<br/>data workflows</span></div><div><strong>SIMULATION</strong><span>Traffic · acoustics<br/>automation</span></div><div><strong>ML</strong><span>Speech · CNN<br/>evaluation</span></div></section>
+
+    <section class="skills" id="skills"><h2>Technical Skills</h2><div class="skill-grid"><div class="skill-col"><h4>Programming</h4><p>Python<br/>SQL<br/>MATLAB<br/>C/C++<br/>Lua</p></div><div class="skill-col"><h4>AI &amp; Data</h4><p>LangChain / LangGraph<br/>Pandas / NumPy / SciPy<br/>Streamlit / Plotly<br/>XGBoost / Prophet / SARIMA</p></div><div class="skill-col"><h4>ML &amp; Audio</h4><p>TensorFlow / Keras<br/>PyTorch<br/>MFCC / librosa<br/>CNNs / evaluation</p></div><div class="skill-col"><h4>Engineering</h4><p>SUMO / RAVEN / Pigeon<br/>Git / Linux / Docker<br/>Testing / C++ unit tests<br/>Experiment design</p></div></div></section>
+
+    <footer class="footer" id="contact"><span>Open to AI / Data / Simulation engineering roles</span><span><span class="accent">REAL INPUTS</span> → REAL SYSTEMS → ENGINEERING OUTCOMES</span></footer>
+  </main>
+</div>
+</body>
+</html>
