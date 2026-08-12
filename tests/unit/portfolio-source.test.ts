@@ -27,6 +27,11 @@ describe('rebuilt portfolio source', () => {
   it('keeps project visuals and copy in the responsive content column', () => {
     expect(source).toContain('.project-visual,.project-text{grid-column:2}');
   });
+
+  it('uses email as the only direct contact method', () => {
+    expect(source).toContain('href="mailto:fiendyuan@gmail.com"');
+    expect(source).not.toContain('href="tel:');
+  });
 });
 
 describe('case study navigation source', () => {

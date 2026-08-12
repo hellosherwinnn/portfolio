@@ -77,15 +77,14 @@ test('shows the complete bakery dashboard preview and public workflow repository
   expect(preview.overflowHeight).toBe(0);
 });
 
-test('draws direct and building-reflected traffic paths toward the same source', async ({ page }) => {
+test('reuses the complete homepage auralization top view in the case study', async ({ page }) => {
   await page.goto('/work/road-traffic-auralization');
 
-  const direct = page.locator('.acoustic-ray.direct');
-  const reflected = page.locator('.acoustic-ray.reflected');
-  await expect(direct).toHaveAttribute('d', 'M740 165 L250 128');
-  await expect(reflected).toHaveAttribute('d', 'M740 165 L520 60 L250 128');
-  await expect(direct).toHaveAttribute('marker-end', 'url(#traffic-direct-arrow)');
-  await expect(reflected).toHaveAttribute('marker-end', 'url(#traffic-reflection-arrow)');
-  await expect(page.locator('[data-point-source="250 128"]')).toHaveCount(1);
-  await expect(page.locator('[data-point-reflection="520 60"]')).toHaveCount(1);
+  const schematic = page.locator('.traffic-preview .auralization-svg');
+  await expect(schematic).toBeVisible();
+  await expect(schematic).toHaveAttribute('viewBox', '0 0 1000 560');
+  await expect(schematic.locator('[data-auralization-source]')).toHaveCount(1);
+  await expect(schematic.locator('[data-auralization-receiver]')).toHaveCount(1);
+  await expect(schematic.locator('.direct-acoustic-path')).toHaveAttribute('d', 'M285 305 L645 360');
+  await expect(schematic.locator('.reflection-paths path')).toHaveCount(2);
 });

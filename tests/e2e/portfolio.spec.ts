@@ -41,6 +41,15 @@ test('keeps project names in title case and anchor navigation working', async ({
   await expect(page.locator('#work')).toBeInViewport();
 });
 
+test('shows email as the only direct contact method', async ({ page }) => {
+  await page.goto('/#contact');
+
+  const email = page.getByRole('link', { name: 'fiendyuan@gmail.com' });
+  await expect(email).toBeVisible();
+  await expect(email).toHaveAttribute('href', 'mailto:fiendyuan@gmail.com');
+  await expect(page.locator('a[href^="tel:"]')).toHaveCount(0);
+});
+
 test('keeps the rebuilt layout usable on a mobile viewport', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto('/');
