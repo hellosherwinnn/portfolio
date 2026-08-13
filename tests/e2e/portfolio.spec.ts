@@ -9,6 +9,27 @@ test('renders the rebuilt portfolio with a top navigation', async ({ page }) => 
   await expect(page.locator('.sidebar')).toHaveCount(0);
   await expect(page.getByRole('banner')).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Primary navigation' })).toBeVisible();
+  await expect(page.locator('link[rel="icon"]')).toHaveAttribute('href', './favicon.svg');
+});
+
+test('shows the header name only after the hero name leaves the viewport', async ({ page }) => {
+  await page.goto('/');
+
+  const headerName = page.locator('.home-identity');
+  await expect(headerName).toHaveAttribute('aria-hidden', 'true');
+  await expect(headerName).not.toHaveClass(/is-visible/);
+
+  await page.locator('#work').scrollIntoViewIfNeeded();
+  await expect(headerName).toHaveAttribute('aria-hidden', 'false');
+  await expect(headerName).toHaveClass(/is-visible/);
+
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await expect(headerName).toHaveAttribute('aria-hidden', 'true');
+  await expect(headerName).not.toHaveClass(/is-visible/);
+
+  await page.goto('/#work');
+  await expect(headerName).toHaveAttribute('aria-hidden', 'false');
+  await expect(headerName).toHaveClass(/is-visible/);
 });
 
 test('moves timeline dates into the former index column and keeps rows centered', async ({ page }) => {
@@ -39,6 +60,16 @@ test('keeps project names in title case and anchor navigation working', async ({
   await page.getByRole('link', { name: /Work/ }).click();
   await expect(page).toHaveURL(/#work$/);
   await expect(page.locator('#work')).toBeInViewport();
+});
+
+test('labels the case study link without a numeric prefix', async ({ page }) => {
+  await page.goto('/#work');
+
+  const caseStudiesLink = page.getByRole('link', { name: 'CASE STUDIES →' });
+  await expect(caseStudiesLink).toBeVisible();
+  await expect(page.getByRole('link', { name: '03 CASE STUDIES →' })).toHaveCount(0);
+  await caseStudiesLink.click();
+  await expect(page).toHaveURL(/\/work\/bakery-ai-analytics\/index\.html$/);
 });
 
 test('shows email as the only direct contact method', async ({ page }) => {

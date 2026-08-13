@@ -32,6 +32,17 @@ describe('rebuilt portfolio source', () => {
     expect(source).toContain('href="mailto:fiendyuan@gmail.com"');
     expect(source).not.toContain('href="tel:');
   });
+
+  it('declares the branded favicon on homepage and case studies', () => {
+    expect(source).toContain('rel="icon" type="image/svg+xml" href="./favicon.svg"');
+    expect(caseStudySource).toContain('rel="icon" type="image/svg+xml" href="../../favicon.svg"');
+  });
+
+  it('reveals the header identity only when the hero name is out of view', () => {
+    expect(source).toContain('class="identity home-identity"');
+    expect(source).toContain('new IntersectionObserver');
+    expect(source).toContain("homeIdentity.classList.toggle('is-visible', visible)");
+  });
 });
 
 describe('case study navigation source', () => {

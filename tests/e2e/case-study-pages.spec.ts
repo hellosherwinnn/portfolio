@@ -31,6 +31,7 @@ for (const caseStudy of caseStudies) {
     await expect(page.getByRole('heading', { level: 2, name: 'Results' })).toBeVisible();
     await expect(page.getByRole('heading', { level: 2, name: 'Reflection' })).toBeVisible();
     await expect(page.locator('.system-view')).toBeVisible();
+    await expect(page.locator('link[rel="icon"]')).toHaveAttribute('href', '../../favicon.svg');
   });
 }
 
@@ -79,6 +80,10 @@ test('shows the complete bakery dashboard preview and public workflow repository
 
 test('reuses the complete homepage auralization top view in the case study', async ({ page }) => {
   await page.goto('/work/road-traffic-auralization');
+
+  const automationMetric = page.locator('.metrics > div').filter({ hasText: 'End-to-end' });
+  await expect(automationMetric).toContainText('automated pipeline');
+  await expect(page.getByText('1 command', { exact: true })).toHaveCount(0);
 
   const schematic = page.locator('.traffic-preview .auralization-svg');
   await expect(schematic).toBeVisible();

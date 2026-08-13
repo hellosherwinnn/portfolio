@@ -97,7 +97,7 @@ export const projects: ProjectCaseStudy[] = [
     metrics: [
       { value: '288', label: 'simulation cases' },
       { value: '4 × 6 × 6 × 2', label: 'parameter matrix' },
-      { value: '1 command', label: 'automated workflow' },
+      { value: 'End-to-end', label: 'automated pipeline' },
     ],
     technologies: ['Python', 'MATLAB', 'Lua', 'SUMO', 'RAVEN', 'Pigeon', 'lxml', 'SciPy', 'Artemis SUITE', 'Reaper', 'Blender', 'SketchUp'],
     visual: 'traffic',
@@ -105,7 +105,7 @@ export const projects: ProjectCaseStudy[] = [
     sections: [
       {
         title: 'Summary',
-        paragraphs: ["This master's thesis turned a multi-step road-traffic-to-audio process into a configurable workflow. It linked SUMO traffic simulation with trajectory processing and RAVEN/Pigeon acoustic simulation, then supported audio processing and evaluation through a one-command batch workflow."],
+        paragraphs: ["This master's thesis turned a multi-step road-traffic-to-audio process into a configurable workflow. It linked SUMO traffic simulation with trajectory processing and RAVEN/Pigeon acoustic simulation, then connected audio processing and evaluation in an automated end-to-end batch pipeline."],
       },
       {
         title: 'Context',
@@ -125,11 +125,11 @@ export const projects: ProjectCaseStudy[] = [
       },
       {
         title: 'Implementation',
-        paragraphs: ['I built a Python road-traffic generator and added batch reading of CSV trajectories. The pipeline extracted SUMO Floating Car Data from XML with lxml, cleaned and transformed trajectories, calculated view vectors, and generated simulation-ready vehicle inputs. It interpolated trajectories from 0.1 s to 0.01 s and 0.005 s where required, centralized path handling, and used a control script for one-command execution.', 'I also automated sequential multi-vehicle workflows in RAVEN and Pigeon, used Lua in Reaper for fading and overlap operations, and used Python for audio cropping and multi-vehicle synthesis.'],
+        paragraphs: ['I built a Python road-traffic generator and added batch reading of CSV trajectories. The pipeline extracted SUMO Floating Car Data from XML with lxml, cleaned and transformed trajectories, calculated view vectors, and generated simulation-ready vehicle inputs. It interpolated trajectories from 0.1 s to 0.01 s and 0.005 s where required, centralized path handling, and coordinated the complete chain through a central control script.', 'I also automated sequential multi-vehicle workflows in RAVEN and Pigeon, used Lua in Reaper for fading and overlap operations, and used Python for audio cropping and multi-vehicle synthesis.'],
       },
       {
         title: 'Results',
-        paragraphs: ['The experiment contained 288 simulation cases in a 4 × 6 × 6 × 2 matrix: 4 vehicle speeds, 6 update intervals, 6 overlap ratios, and 2 crossfading methods. Evaluation combined SPL temporal-derivative analysis, loudness and sharpness analysis with Artemis SUITE and ECMA-418-2 methods, and an informal listening experiment with 5 acoustics-experienced participants. The one-command workflow replaced the multi-step manual processing sequence for the configured cases.'],
+        paragraphs: ['The experiment contained 288 simulation cases in a 4 × 6 × 6 × 2 matrix: 4 vehicle speeds, 6 update intervals, 6 overlap ratios, and 2 crossfading methods. Evaluation combined SPL temporal-derivative analysis, loudness and sharpness analysis with Artemis SUITE and ECMA-418-2 methods, and an informal listening experiment with 5 acoustics-experienced participants. The end-to-end automated pipeline replaced the multi-step manual processing sequence for the configured cases.'],
       },
       {
         title: 'Reflection',

@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="./favicon.svg" />
 <title>Zhengjie — AI & Data Engineer</title>
 <style>
 :root{
@@ -27,6 +28,7 @@ a{color:inherit;text-decoration:none}
 .topbar{position:sticky;top:0;z-index:20;border-bottom:1px solid var(--line);background:rgba(247,247,243,.94);backdrop-filter:blur(12px)}
 .topbar-inner{max-width:1280px;margin:0 auto;padding:14px 42px;display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:32px}
 .identity{display:flex;align-items:baseline;gap:12px;white-space:nowrap}
+.home-identity{opacity:0;visibility:hidden;pointer-events:none;transform:translateY(-3px);transition:opacity .2s ease,transform .2s ease,visibility 0s linear .2s}.home-identity.is-visible{opacity:1;visibility:visible;pointer-events:auto;transform:none;transition-delay:0s}
 .brand{font:700 20px/1 var(--sans);letter-spacing:-.025em}.brand i{display:inline-block;width:14px;height:2px;background:var(--orange);margin-left:5px;vertical-align:middle}
 .brand-sub{font:9px var(--mono);color:#687178;letter-spacing:.11em;text-transform:uppercase}
 .nav{display:flex;align-items:center;justify-content:center;gap:4px}
@@ -88,14 +90,14 @@ h1{font-size:74px;line-height:.92;letter-spacing:-.045em;margin:0 0 19px;font-we
 .timeline-type{display:flex;align-items:center;justify-content:flex-end;padding:26px 0;font:10px var(--mono);color:#7a8387;text-transform:uppercase;letter-spacing:.06em}
 @media(max-width:980px){.timeline-head span{display:none}.timeline-row{grid-template-columns:76px 28px minmax(0,1fr);min-height:auto}.timeline-date{grid-column:1;grid-row:1/3;padding:24px 6px 24px 0;align-items:flex-start}.timeline-rail{grid-column:2;grid-row:1/3;margin-left:8px}.timeline-body{grid-column:3;padding:26px 0 10px 18px}.timeline-type{grid-column:3;padding:0 0 24px 18px;justify-content:flex-start;color:var(--teal)}.timeline-body h3{font-size:23px}.timeline-detail{grid-template-columns:1fr;gap:4px}}
 
-@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}.pulse{animation:none!important}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}.pulse{animation:none!important}.home-identity{transition:none}}
 </style>
 </head>
 <body>
 <div class="shell">
   <header class="topbar">
     <div class="topbar-inner">
-      <a class="identity" href="#home" aria-label="Zhengjie portfolio home">
+      <a class="identity home-identity" href="#home" aria-label="Zhengjie portfolio home" aria-hidden="true" inert>
         <span class="brand">Zhengjie<i></i></span>
         <span class="brand-sub">Portfolio</span>
       </a>
@@ -168,7 +170,7 @@ h1{font-size:74px;line-height:.92;letter-spacing:-.045em;margin:0 0 19px;font-we
     </section>
 
     <section class="section" id="work">
-      <div class="section-head"><h2>Selected Work</h2><a href="./work/bakery-ai-analytics/index.html">03 CASE STUDIES →</a></div>
+      <div class="section-head"><h2>Selected Work</h2><a href="./work/bakery-ai-analytics/index.html">CASE STUDIES →</a></div>
 
       <article class="project">
         <a class="project-link" href="./work/bakery-ai-analytics/index.html" aria-label="View case study: Bakery AI Analytics Platform"><span class="sr-only">View case study</span></a>
@@ -442,5 +444,26 @@ h1{font-size:74px;line-height:.92;letter-spacing:-.045em;margin:0 0 19px;font-we
     <footer class="footer" id="contact"><div class="footer-contact"><span>Contact</span><a href="mailto:fiendyuan@gmail.com">fiendyuan@gmail.com</a></div><span><span class="accent">REAL INPUTS</span> → REAL SYSTEMS → ENGINEERING OUTCOMES</span></footer>
   </main>
 </div>
+<script>
+  const homeIdentity = document.querySelector('.home-identity');
+  const heroName = document.querySelector('.hero-copy h1');
+
+  if (homeIdentity instanceof HTMLElement && heroName instanceof HTMLElement) {
+    const setHomeIdentityVisible = (visible: boolean) => {
+      homeIdentity.classList.toggle('is-visible', visible);
+      homeIdentity.setAttribute('aria-hidden', String(!visible));
+      homeIdentity.inert = !visible;
+    };
+
+    const nameRect = heroName.getBoundingClientRect();
+    setHomeIdentityVisible(nameRect.bottom <= 64 || nameRect.top >= window.innerHeight);
+
+    const nameObserver = new IntersectionObserver(
+      ([entry]) => setHomeIdentityVisible(!entry.isIntersecting),
+      { rootMargin: '-64px 0px 0px 0px', threshold: 0 },
+    );
+    nameObserver.observe(heroName);
+  }
+</script>
 </body>
 </html>
