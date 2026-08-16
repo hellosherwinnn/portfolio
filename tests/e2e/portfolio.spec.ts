@@ -3,9 +3,9 @@ import { expect, test } from '@playwright/test';
 test('renders the rebuilt portfolio with a top navigation', async ({ page }) => {
   await page.goto('/');
 
-  await expect(page).toHaveTitle('Zhengjie — AI & Data Engineer');
+  await expect(page).toHaveTitle('Zhengjie - AI & Data Engineer');
   await expect(page.getByRole('heading', { level: 1, name: 'Zhengjie' })).toBeVisible();
-  await expect(page.getByText('Zhengjie Yuan', { exact: true })).toHaveCount(0);
+  await expect(page.getByText(/\bZhengjie\s+Yuan\b/i)).toHaveCount(0);
   await expect(page.locator('.sidebar')).toHaveCount(0);
   await expect(page.getByRole('banner')).toBeVisible();
   await expect(page.getByRole('navigation', { name: 'Primary navigation' })).toBeVisible();
@@ -65,20 +65,19 @@ test('keeps project names in title case and anchor navigation working', async ({
 test('labels the case study link without a numeric prefix', async ({ page }) => {
   await page.goto('/#work');
 
-  const caseStudiesLink = page.getByRole('link', { name: 'CASE STUDIES →' });
+  const caseStudiesLink = page.getByRole('link', { name: 'CASE STUDIES ↗' });
   await expect(caseStudiesLink).toBeVisible();
-  await expect(page.getByRole('link', { name: '03 CASE STUDIES →' })).toHaveCount(0);
+  await expect(page.getByRole('link', { name: '03 CASE STUDIES ↗' })).toHaveCount(0);
   await caseStudiesLink.click();
   await expect(page).toHaveURL(/\/work\/bakery-ai-analytics\/index\.html$/);
 });
 
-test('shows email as the only direct contact method', async ({ page }) => {
+test('keeps the contact block free of direct personal addresses', async ({ page }) => {
   await page.goto('/#contact');
 
-  const email = page.getByRole('link', { name: 'fiendyuan@gmail.com' });
-  await expect(email).toBeVisible();
-  await expect(email).toHaveAttribute('href', 'mailto:fiendyuan@gmail.com');
-  await expect(page.locator('a[href^="tel:"]')).toHaveCount(0);
+  await expect(page.locator('#contact')).not.toContainText('fiendyuan@gmail.com');
+  await expect(page.locator('#contact')).not.toContainText('mailto:');
+  await expect(page.locator('#contact')).not.toContainText('tel:');
 });
 
 test('keeps the rebuilt layout usable on a mobile viewport', async ({ page }) => {

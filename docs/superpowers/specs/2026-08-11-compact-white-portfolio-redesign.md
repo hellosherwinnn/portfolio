@@ -8,7 +8,7 @@ Redesign Zhengjie's portfolio as a compact, recruiter-focused AI and data engine
 
 All biographical, education, employment, project, metric, date, and technology claims must be verified against:
 
-`C:\Users\fiend\.codex\.chatgpt-projects\g-p-69eca5ad746c81918abde46902d2d6cf\sources\Zhengjie_Yuan_Master_CV_Reference_2026.08.09_v8(1).txt`
+`C:\Users\fiend\.codex\.chatgpt-projects\g-p-69eca5ad746c81918abde46902d2d6cf\sources\master-cv-reference.txt`
 
 Files under `sources/` are read-only. The public display name remains `Zhengjie`. No Bosch role or any other unverified experience may appear.
 

@@ -5,9 +5,9 @@ const source = readFileSync(new URL('../../src/pages/index.astro', import.meta.u
 const caseStudySource = readFileSync(new URL('../../src/pages/work/[slug].astro', import.meta.url), 'utf8');
 
 describe('rebuilt portfolio source', () => {
-  it('uses Zhengjie as the only displayed personal name', () => {
+  it('uses the public display name consistently', () => {
     expect(source).toContain('<h1>Zhengjie</h1>');
-    expect(source).not.toMatch(/Zhengjie\s+Yuan/i);
+    expect(source).not.toMatch(/\bZhengjie\s+Yuan\b/i);
   });
 
   it('uses a top navigation and stacked timeline dates', () => {
@@ -28,8 +28,9 @@ describe('rebuilt portfolio source', () => {
     expect(source).toContain('.project-visual,.project-text{grid-column:2}');
   });
 
-  it('uses email as the only direct contact method', () => {
-    expect(source).toContain('href="mailto:fiendyuan@gmail.com"');
+  it('keeps the contact block free of direct personal addresses', () => {
+    expect(source).not.toContain('href="mailto:');
+    expect(source).not.toContain('fiendyuan@gmail.com');
     expect(source).not.toContain('href="tel:');
   });
 

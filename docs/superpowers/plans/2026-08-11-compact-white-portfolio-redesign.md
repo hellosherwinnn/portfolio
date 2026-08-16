@@ -10,8 +10,8 @@
 
 ## Global Constraints
 
-- Treat `C:\Users\fiend\.codex\.chatgpt-projects\g-p-69eca5ad746c81918abde46902d2d6cf\sources\Zhengjie_Yuan_Master_CV_Reference_2026.08.09_v8(1).txt` as the only factual source and never modify anything under `sources/`.
-- Public display name is exactly `Zhengjie`; never show `Zhengjie Yuan` or invent Bosch experience.
+- Treat the master CV reference under `sources/` as the only factual source and never modify anything under `sources/`.
+- Public display name is exactly `Zhengjie`; never show a full legal name or invent Bosch experience.
 - Theme is white-dominant with near-black text, muted cool gray, and one cold-blue accent.
 - Do not show workflow diagrams, unexplained numbered steps, fake dashboards, fake screenshots, fake percentages, or unverified metrics.
 - Keep `/`, `/work/bakery-ai-analytics`, `/work/road-traffic-auralization`, `/work/spoken-digit-cnn`, `#work`, `#experience`, existing nav labels, and keyboard access stable.
@@ -385,7 +385,7 @@ git commit -m "style: tighten white portfolio presentation"
 Run:
 
 ```powershell
-rg -n "WorkflowDiagram|Traffic scenario|data foundation|timeline-index|timeline-marker|—|–|Bosch|Zhengjie Yuan" src
+rg -n "WorkflowDiagram|Traffic scenario|data foundation|timeline-index|timeline-marker|—|–|Bosch|full legal name" src
 ```
 
 Expected: no forbidden homepage output or invented identity claims. References inside unused component files are acceptable only if the component is not imported by the homepage; prefer removing dead imports and dead CSS.
