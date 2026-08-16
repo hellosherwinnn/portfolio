@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 test('renders the rebuilt portfolio with a top navigation', async ({ page }) => {
   await page.goto('/');
 
-  await expect(page).toHaveTitle('Zhengjie - AI & Data Engineer');
+  await expect(page).toHaveTitle('Zhengjie — AI & Data Engineer');
   await expect(page.getByRole('heading', { level: 1, name: 'Zhengjie' })).toBeVisible();
   await expect(page.getByText(/\bZhengjie\s+Yuan\b/i)).toHaveCount(0);
   await expect(page.locator('.sidebar')).toHaveCount(0);
@@ -65,9 +65,9 @@ test('keeps project names in title case and anchor navigation working', async ({
 test('labels the case study link without a numeric prefix', async ({ page }) => {
   await page.goto('/#work');
 
-  const caseStudiesLink = page.getByRole('link', { name: 'CASE STUDIES ↗' });
+  const caseStudiesLink = page.getByRole('link', { name: 'CASE STUDIES →' });
   await expect(caseStudiesLink).toBeVisible();
-  await expect(page.getByRole('link', { name: '03 CASE STUDIES ↗' })).toHaveCount(0);
+  await expect(page.getByRole('link', { name: '03 CASE STUDIES →' })).toHaveCount(0);
   await caseStudiesLink.click();
   await expect(page).toHaveURL(/\/work\/bakery-ai-analytics\/index\.html$/);
 });
